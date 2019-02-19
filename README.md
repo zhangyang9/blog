@@ -1,4 +1,4 @@
-# Welcome to the blog wiki!
+# Welcome to my blog !
 ## 基础技能
 ### OPS
 * [硬件相关](/docs/hardware/home.md)

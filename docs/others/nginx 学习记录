@@ -1,0 +1,196 @@
+nginx 学习记录
+
+反向代理：工作在服务端前面的代理，所有的用户请求不能直接访问真正的 web 服务器，只能访问代理服务器，由代理服务器将请求代理至后端
+正向代理：工作在客户端前端的 web 代理,负责吧用户的请求代理去真正的 web 服务器
+
+
+nginx 配置文件：
+
+main  定义 work进程数 错误日志 用户 组 等
+
+event {
+	定义事件驱动的相关配置
+}
+
+server {
+    定义虚拟主机
+	
+}
+
+httpd {
+	定义关于http的相关配置
+}
+
+location URI {
+
+	定义 URI 访问控制规则和各种属性，
+	用法： location 【op操作符】 URI   或  location @name 
+	    操作符种类：= 路径精确匹配   ^~ 不做正则表达式匹配，逐字符搜索    ^* 不区分大小写      ~ 区分大小写
+}
+
+
+反向代理： proxy_pass 将请求代理到后端
+ 
+nginx 提供了代理功能之后 将用户的 真实ip隐藏了， 可以使用 proxy_set_header 指令将用户真实地址传到后端  eg: proxy_set_header X-REAL-IP $remote_addr    多层代理要使用 ￥x_forwarded_for
+$x_forwarded_for 和 $remote_addr  区别：  https://blog.csdn.net/njxdy/article/details/9998481
+
+proxy_set_header 可以将很多信息传到后端 包括 $request_uri $request_method $home $host_name $remot_addr  $server_name $server_addr $server_protocol $uri $等
+
+=============================
+
+负载均衡:
+
+支持三种负载均衡算法：
+	1. round-robin  默认的 加权轮询
+	2. ip_hash 保证同一个请求hash到同一个后端
+	3. least_conn 最小链接数请求
+
+upstream: 
+可用指令：
+	weight 权重
+	max_fail 最大错误次数 健康监测需要
+	fail_timeout 错误超时时间 默认10s 健康监测需要
+
+
+eg:
+upstream BD-ADMIN-G0-YF {
+		#ip_hash
+       session_sticky cookie=BD-ADMIN-G0-YF path=/;
+       check interval=5000 rise=2 fall=3 timeout=1000 type=http;
+           server 10.75.11.30:80 weight=4;
+           server 10.75.11.31:80 weight=4;
+           server 10.75.11.32:80 weight=4;
+           server 10.75.11.33:80 weight=4;
+           }
+
+======================== 
+
+nginx 的缓存功能
+
+	nginx 的缓存由两部分组成：
+		1.共享内存：存储健和缓存元数据
+		2.磁盘空间：存储数据
+
+proxy_cache_path 指令定义缓存路径
+	levels=levels 指令 定义子目录级别，nginx最多支持3级子目录    eg: levels=1:1:2 表示有三级子目录，一级子目录和二级子目录只能有一个字符命名，三级子目录能够有2个字符命名(nginx的缓存子目录命名最多只能有2个字符)
+	keys_zone=name:size   指令用于 定义共享内存 的名字和大小
+	max_size=size 指令定义最大的可用缓存大小
+
+	
+	eg:    proxy_cache_path /dev/shm/proxy_cache levels=1:2 keys_zone=common_proxy:20m inactive=5m max_size=1024m;
+
+其他常用的三种缓存:
+	fastcgi_cache
+	open_log_cache
+	open_file_cache
+
+==========================
+
+nginx 的压缩功能
+
+
+eg:
+    gzip on;            #开启压缩
+    #gzip_flush_mode SYNC_FLUSH;
+    gzip_min_length 1k;
+    gzip_buffers 4 4k;  #压缩使用的缓存区
+    gzip_http_version 1.1;
+    gzip_comp_level 9;
+    gzip_types text/plain text/css text/xml application/x-javascript application/json text/javascript;
+    gzip_vary on;
+
+============================
+
+nginx 的 URI 重写模块: 基于`正则表达式`
+	if (condition) {
+		rewrite 正则 重定向后的URI；
+	}
+	`只能用于 server 和 location 组`
+
+	判断符：
+		~ 被匹配就满足条件   !~
+		= 等于满足条件      !=
+		~* 不区分大小写     !~*
+		
+
+
+
+eg:
+    rewrite  "^/system/dpool_check\.php(.*)$" /system/dpool_check.php$1 last;
+    
+    if ($http_host = "topic.weibo.com") {
+        rewrite "^/zt/(.+)$" "http://huati.weibo.com/zt/$1" permanent;
+        rewrite "^/k/([^/]+)$" "http://huati.weibo.com/k/$1" permanent;
+        rewrite "^/[^/]+/(\d+)$" "http://huati.weibo.com/oldtopic?oldtid=$1" permanent;
+        rewrite ".*" "http://huati.weibo.com/"  permanent;
+    }
+    # rewrite 规则后面还支持 4 种 tag 标记，分别是`last`,`break`,`redirect`,`permanent`
+    # last : 本次重写完成之后，进行下一次检查
+    # break : 本次重写完成之后，不进行下一次检查，直接返回结果
+    # rediret : 临时重定向 返回 302 响应吗
+    # permanent : 永久重定向 返回 301 响应吗
+
+
+    
+    if ($http_host = "shuo.weibo.com") {
+        rewrite ^/(.*)$ http://huati.weibo.com/$1 permanent;
+    }
+
+        if ($http_host = "2015.weibo.cn") {
+                rewrite ^/(.*)$ http://weibo.com permanent;
+        }
+
+    if ($uri !~ "^/(?:crossdomain\.xml|favicon\.ico|xhprof_httml/.*|static/.*|robots\.txt)$") {
+        rewrite ^/(.*) /index.php/$1 last;
+    }
+    if ( $uri ~* "/system/.*" ) {
+            break;
+    }
+
+    if ( $uri ~* "^/dpool_monitor" ) { 
+    		break;
+    }
+        if ($http_host = i.huati.weibo.com) {
+                set  $status_internal "1";
+        }
+        if  ( $clientip !~* "^127\.0\.0\.1" ) {
+                set $status_internal "1${status_internal}";
+        }
+        if  ( $clientip !~* "^10\." ) {
+                set $status_internal "1${status_internal}";
+        }
+        if  ( $clientip !~* "^172\.16\." ) {
+                set $status_internal "1${status_internal}";
+        }
+        if  ( $clientip !~* "^192\.168\." ) {
+                set $status_internal "1${status_internal}";
+        }
+       if  ( $http_jerry_server != 1 ) {
+            set $status_internal "1${status_internal}";
+       }
+       if  ( $status_internal = 111111 ) {
+            return  403;
+       }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

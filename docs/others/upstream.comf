@@ -1,0 +1,37 @@
+upstream.comf
+ 
+upstream DPOOL-Z-WEIBO-COM{
+	server 172.16.7.60 max_fails=3 fail_timeout=1s;
+        server 172.16.7.61 max_fails=3 fail_timeout=1s;
+}
+
+upstream BD-ADMIN-G0-YF {
+       session_sticky cookie=BD-ADMIN-G0-YF path=/;
+       check interval=5000 rise=2 fall=3 timeout=1000 type=http;
+           server 10.75.11.30:80 weight=4;
+           server 10.75.11.31:80 weight=4;
+           server 10.75.11.32:80 weight=4;
+           server 10.75.11.33:80 weight=4;
+           }
+upstream CG-G0-8001-YF {
+       session_sticky cookie=CG-G0-8001-YF path=/;
+       check interval=5000 rise=2 fall=3 timeout=1000 type=http;
+       server 10.75.10.140:8001 weight=4;
+           server 10.75.10.141:8001 weight=4;
+           #server 10.75.10.142:8001 weight=4;
+           server 10.75.10.143:8001 weight=4;
+           server 10.75.10.144:8001 weight=4;
+           server 10.75.10.145:8001 weight=4;
+           server 10.75.11.47:8001 weight=4;
+           server 10.75.11.48:8001 weight=4;
+           server 10.75.11.49:8001 weight=4;
+           server 10.75.11.50:8001 weight=4;
+           server 10.75.11.51:8001 weight=4;
+           server 10.75.11.52:8001 weight=4;
+           server 10.75.13.45:8001 weight=4;
+           server 10.75.13.46:8001 weight=4;
+           server 10.75.13.47:8001 weight=4;
+           server 10.75.13.48:8001 weight=4;
+           server 10.75.13.60:8001 weight=4;
+           server 10.75.13.65:8001 weight=4;
+           }

@@ -4,6 +4,7 @@
 * [硬件相关](/docs/hardware/home.md)
 * [操作系统相关](/docs/operate_system/home.md)
 * [网络相关](/docs/network/home.md)
+* [负载均衡相关](/docs/load_balance/load_balance.md)
 * [应用层相关](/docs/application/home.md)
 
 ### DEV

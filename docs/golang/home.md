@@ -14,5 +14,5 @@ go 语言的缺点
 2.不够灵活。强制在 GOPATH 中编程。强制使用特定的文件组织结构 src bin pkg 等
 
 
-
+[golang 中的自旋锁](./golang_spin_lock.md)
 

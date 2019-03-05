@@ -22,3 +22,12 @@
 ### 监控相关
 * [falcon](/docs/falcon/home.md)
 * [grafana](/docs/grafana/home.md)
+
+### 近期需要整理的知识点
+* 使用 strace lsof vmstat 等系统工具分析系统性能瓶颈
+* swiss 架构图
+* ansible 知识概要
+* 全链路压测
+* 降级
+* 限流熔断机制
+* 

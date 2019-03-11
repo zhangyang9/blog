@@ -15,4 +15,5 @@ go 语言的缺点
 
 
 [golang 中的自旋锁](./golang_spin_lock.md)
+[go 1.12的若干变化](./some-changes-in-go1.12.md)
 

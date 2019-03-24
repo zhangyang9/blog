@@ -61,7 +61,15 @@ fpm 作为 php 的进程管理器，每处理一个请求都会将该请求的�
 * 原则上越多越好，php-cgi 进程多了，请求排队的少，并发能力强，处理快
 * max_children 配置不合适会造成服务间歇性 502 ,一个 fpm 进程处理的请求累积到 max_request 之后就会重启导致 502 
 
+###优化四：零点峰值突发瞬间流量导致机器 load 飙升。
+* 原因：
+* `pm.min_spare_servers=5 pm.max_spare_servers=20 `  太小会导致峰值流量来临时待命的 fpm 进程不足，大量的 fork 会使 load 瞬间飙高
+* 解决方案：修改 fpm 参数为：
+```
+pm.min_spare_servers=200
+pm.max_spare_servers=300
 
+```
 
 
 

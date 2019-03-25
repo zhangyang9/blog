@@ -29,6 +29,8 @@ Usage: tcpdump [-aAbdDefhHIJKlLnNOpqRStuUvxX] [ -B size ] [ -c count ]
 tcpdump 的表达式由多个单元组成，每个单元由一个值和该值的修饰符两部分组成，修饰符有三种： `proto`、`dir`、`type`     
 
 ![tcpdump表达式](../../pictures/tcpdump1.png)
+
+
 1. type:指定 值 的类型，可选类型包括 `host/net/port/portrange`。 例如：“host localhost”、“port 20”、“portrange 6000-8080”
 2. dir:指定流入流出方向，可选方向包括 `src/dst/src or dst/src and dst`,默认为 src and dst 。 例如：“src foo ”表示源主机为 foo 的包，“dst net 10.73”表示目的网段在 10.73的数据包，“src or dst port 53”表示源或目的端口为 53 的数据包
 3. proto:指定协议，可选项包括不限于`tcp/udp/arp/lcmp等`，默认匹配所有协议。 例如：“tcp port 21”

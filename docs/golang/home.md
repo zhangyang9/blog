@@ -17,3 +17,16 @@ go 语言的缺点
 [golang 中的自旋锁](./golang_spin_lock.md)
 [go 1.12的若干变化](./some-changes-in-go1.12.md)
 
+
+## go 进阶
+
+* GPM 模型
+* goroutine 调度
+* channel 调度
+* 内存布局
+* 指针陷阱
+* CGO
+* 反射
+* 内存管理
+* GC
+* 

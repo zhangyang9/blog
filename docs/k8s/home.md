@@ -8,7 +8,7 @@
 * Kubernetes包含几个组件，各个组件的功能是什么，组件之间是如何交互的？ [参考](http://dockone.io/article/2288)
 * [kubernetes的网络是如何实现的?](k8s_net.md)
 * Kubernetes的Pause容器有什么用，是否可以去掉？
-* Kubernetes中的Pod内几个容器之间的关系是什么？
+* Kubernetes中的Pod内几个容器之间的关系是什么？ 参考[pod 容器间通讯方式](https://blog.csdn.net/weixin_29115985/article/details/78963125)
 * 一个经典Pod的完整生命周期是怎么样的？
 * Kubernetes的Service和ep是如何关联和相互影响的？
 * 详述kube-proxy的工作原理，一个请求是如何经过层层转发落到某个Pod上的？注意请求可能来自Pod也可能来自外部。

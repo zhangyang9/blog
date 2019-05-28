@@ -5,7 +5,7 @@
 
 ## 带着问题去探索
 
-* Kubernetes包含几个组件，各个组件的功能是什么，组件之间是如何交互的？
+* Kubernetes包含几个组件，各个组件的功能是什么，组件之间是如何交互的？ [参考](http://dockone.io/article/2288)
 * [kubernetes的网络是如何实现的?](k8s_net.md)
 * Kubernetes的Pause容器有什么用，是否可以去掉？
 * Kubernetes中的Pod内几个容器之间的关系是什么？
